@@ -248,7 +248,126 @@
     Resale Profit · v1.0
 </div>
 
+</div>
 
+<div id="dealsScreen" style="display:none;">
+
+    <div class="header">
+        <div class="logo">RESALE TOOLS</div>
+        <h1>Мои сделки</h1>
+        <div class="subtitle">
+            Твоя статистика
+        </div>
+    </div>
+
+    <div class="card">
+
+        <div class="stat-name">
+            Всего сделок
+        </div>
+
+        <div
+            id="dealsCount"
+            style="font-size:32px;font-weight:700;margin-bottom:20px;"
+        >
+            0
+        </div>
+
+        <div class="stat-name">
+            Общая прибыль
+        </div>
+
+        <div
+            id="totalProfit"
+            style="font-size:32px;font-weight:700;"
+        >
+            0 ₽
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="profileScreen" style="display:none;">
+
+    <div class="header">
+        <div class="logo">RESALE TOOLS</div>
+        <h1>Профиль</h1>
+    </div>
+
+    <div class="card">
+
+        <div
+            id="profileName"
+            style="font-size:25px;font-weight:700;"
+        >
+            Пользователь
+        </div>
+
+        <div
+            id="profileId"
+            class="subtitle"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<div
+    style="
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        height:70px;
+        display:flex;
+        background:var(--tg-theme-secondary-bg-color,#19191b);
+        border-top:1px solid rgba(128,128,128,.15);
+    "
+>
+
+    <button
+        onclick="showScreen('calculatorScreen')"
+        style="
+            flex:1;
+            background:transparent;
+            color:inherit;
+            border:0;
+        "
+    >
+        🧮<br>
+        Калькулятор
+    </button>
+
+    <button
+        onclick="showScreen('dealsScreen')"
+        style="
+            flex:1;
+            background:transparent;
+            color:inherit;
+            border:0;
+        "
+    >
+        📊<br>
+        Мои сделки
+    </button>
+
+    <button
+        onclick="showScreen('profileScreen')"
+        style="
+            flex:1;
+            background:transparent;
+            color:inherit;
+            border:0;
+        "
+    >
+        👤<br>
+        Профиль
+    </button>
+
+</div>
 <script>
 
     // =========================
@@ -470,7 +589,28 @@ if (window.Telegram && window.Telegram.WebApp) {
         ).format(number) + " ₽";
 
     }
+function showScreen(screenId) {
+
+    document.getElementById("calculatorScreen").style.display = "none";
+    document.getElementById("dealsScreen").style.display = "none";
+    document.getElementById("profileScreen").style.display = "none";
+
+    document.getElementById(screenId).style.display = "block";
+
+
+    if (screenId === "profileScreen" && user) {
+
+        document.getElementById("profileName").innerText =
+            user.first_name;
+
+        document.getElementById("profileId").innerText =
+            "Telegram ID: " + user.id;
+
+    }
+
+}
 
 </script>
 </body>
+    <div id="calculatorScreen">
 </html>

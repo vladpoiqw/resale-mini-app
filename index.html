@@ -9,6 +9,8 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
 
         * {
@@ -45,7 +47,6 @@
         h1 {
             margin: 0;
             font-size: 30px;
-            letter-spacing: -1px;
         }
 
         .subtitle {
@@ -54,7 +55,8 @@
             opacity: 0.55;
         }
 
-        .card {
+        .card,
+        .result {
             background: var(--tg-theme-secondary-bg-color, #19191b);
             border-radius: 22px;
             padding: 20px;
@@ -67,7 +69,6 @@
         label {
             display: block;
             margin-bottom: 7px;
-
             font-size: 13px;
             opacity: 0.55;
         }
@@ -75,22 +76,16 @@
         input {
             width: 100%;
             height: 52px;
-
             padding: 0 15px;
 
             border: none;
             outline: none;
-
             border-radius: 14px;
 
             background: var(--tg-theme-bg-color, #101011);
             color: var(--tg-theme-text-color, #ffffff);
 
             font-size: 17px;
-        }
-
-        input::placeholder {
-            opacity: 0.3;
         }
 
         button {
@@ -107,15 +102,15 @@
             font-weight: 600;
         }
 
+        .save-button {
+            margin-top: 10px;
+            background: transparent;
+            border: 1px solid rgba(128,128,128,0.35);
+        }
+
         .result {
             display: none;
-
             margin-top: 18px;
-            padding: 20px;
-
-            border-radius: 20px;
-
-            background: var(--tg-theme-secondary-bg-color, #19191b);
         }
 
         .result-title {
@@ -127,32 +122,24 @@
         .profit {
             font-size: 36px;
             font-weight: 700;
-
-            letter-spacing: -1px;
-
             margin-bottom: 18px;
         }
 
         .stats {
             display: grid;
-
             grid-template-columns: 1fr 1fr;
-
             gap: 10px;
         }
 
         .stat {
             padding: 14px;
-
             border-radius: 15px;
-
             background: var(--tg-theme-bg-color, #101011);
         }
 
         .stat-name {
             font-size: 12px;
             opacity: 0.5;
-
             margin-bottom: 5px;
         }
 
@@ -161,13 +148,17 @@
             font-weight: 600;
         }
 
+        .message {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
         .footer {
             text-align: center;
-
             margin-top: 20px;
-
             font-size: 11px;
-
             opacity: 0.3;
         }
 
@@ -190,11 +181,10 @@
     </h1>
 
     <div class="subtitle" id="subtitle">
-        Рассчитай доходность сделки за несколько секунд
+        Рассчитай доходность сделки
     </div>
 
 </div>
-
 
 
 <div class="card">
@@ -216,7 +206,6 @@
     </div>
 
 
-
     <div class="field">
 
         <label>
@@ -233,11 +222,10 @@
     </div>
 
 
-
     <div class="field">
 
         <label>
-            Комиссия и другие расходы
+            Комиссия и расходы
         </label>
 
         <input
@@ -250,23 +238,18 @@
     </div>
 
 
-
     <button onclick="calculate()">
         Рассчитать
     </button>
 
-
 </div>
-
 
 
 <div class="result" id="result">
 
-
     <div class="result-title">
         Чистая прибыль
     </div>
-
 
     <div class="profit" id="profit">
         0 ₽
@@ -275,22 +258,17 @@
 
     <div class="stats">
 
-
         <div class="stat">
 
             <div class="stat-name">
                 Маржа
             </div>
 
-            <div
-                class="stat-value"
-                id="margin"
-            >
+            <div class="stat-value" id="margin">
                 0%
             </div>
 
         </div>
-
 
 
         <div class="stat">
@@ -299,21 +277,29 @@
                 ROI
             </div>
 
-            <div
-                class="stat-value"
-                id="roi"
-            >
+            <div class="stat-value" id="roi">
                 0%
             </div>
 
         </div>
 
-
     </div>
 
 
+    <button
+        class="save-button"
+        onclick="saveDeal()"
+    >
+        💾 Сохранить сделку
+    </button>
+
 </div>
 
+
+<div
+    class="message"
+    id="message"
+></div>
 
 
 <div class="footer">
@@ -325,60 +311,98 @@
 <script>
 
 
-    // Telegram Mini App
+    // ==============================
+    // SUPABASE
+    // ==============================
 
-    const tg = window.Telegram.WebApp;
+    const SUPABASE_URL =
+        "msqszglpcbutxeciaoma";
+
+    const SUPABASE_KEY =
+        "sb_publishable_khm1gzHsh9AihyYrA7k63w_CiBsNc0B";
+
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+
+    // ==============================
+    // TELEGRAM
+    // ==============================
+
+    const tg =
+        window.Telegram.WebApp;
 
     tg.ready();
 
     tg.expand();
 
 
-
-    // Получаем пользователя Telegram
-
-    const user = tg.initDataUnsafe?.user;
+    const user =
+        tg.initDataUnsafe?.user;
 
 
     if (user) {
 
-        document.getElementById("subtitle").innerText =
-            "Привет, " + user.first_name + "!";
-
-        console.log(
-            "Telegram ID:",
-            user.id
-        );
+        document.getElementById(
+            "subtitle"
+        ).innerText =
+            "Привет, " +
+            user.first_name +
+            "!";
 
     }
 
 
 
-    // Расчёт прибыли
+    // ==============================
+    // ТЕКУЩАЯ СДЕЛКА
+    // ==============================
+
+    let currentDeal = null;
+
+
+
+    // ==============================
+    // РАСЧЁТ
+    // ==============================
 
     function calculate() {
 
 
         const buy =
             Number(
-                document.getElementById("buy").value
+                document.getElementById(
+                    "buy"
+                ).value
             );
 
 
         const sell =
             Number(
-                document.getElementById("sell").value
+                document.getElementById(
+                    "sell"
+                ).value
             );
 
 
         const expenses =
             Number(
-                document.getElementById("expenses").value
+                document.getElementById(
+                    "expenses"
+                ).value
             ) || 0;
 
 
 
-        if (buy <= 0 || sell <= 0) {
+        if (
+            buy <= 0 ||
+            sell <= 0
+        ) {
 
             alert(
                 "Укажи цену покупки и продажи"
@@ -391,13 +415,13 @@
 
 
         const profit =
-            sell - buy - expenses;
-
+            sell -
+            buy -
+            expenses;
 
 
         const margin =
             (profit / sell) * 100;
-
 
 
         const roi =
@@ -405,29 +429,143 @@
 
 
 
-        document.getElementById("profit").innerText =
+        currentDeal = {
+
+            buy_price: buy,
+
+            sell_price: sell,
+
+            expenses: expenses,
+
+            profit: profit
+
+        };
+
+
+
+        document.getElementById(
+            "profit"
+        ).innerText =
             formatMoney(profit);
 
 
 
-        document.getElementById("margin").innerText =
+        document.getElementById(
+            "margin"
+        ).innerText =
             margin.toFixed(1) + "%";
 
 
 
-        document.getElementById("roi").innerText =
+        document.getElementById(
+            "roi"
+        ).innerText =
             roi.toFixed(1) + "%";
 
 
 
-        document.getElementById("result").style.display =
+        document.getElementById(
+            "result"
+        ).style.display =
             "block";
+
+
+        document.getElementById(
+            "message"
+        ).innerText = "";
 
     }
 
 
 
-    // Форматирование денег
+    // ==============================
+    // СОХРАНЕНИЕ
+    // ==============================
+
+    async function saveDeal() {
+
+
+        if (!currentDeal) {
+
+            alert(
+                "Сначала рассчитай сделку"
+            );
+
+            return;
+
+        }
+
+
+        if (!user) {
+
+            alert(
+                "Не удалось определить пользователя Telegram"
+            );
+
+            return;
+
+        }
+
+
+
+        const deal = {
+
+            user_id:
+                String(user.id),
+
+            buy_price:
+                currentDeal.buy_price,
+
+            sell_price:
+                currentDeal.sell_price,
+
+            expenses:
+                currentDeal.expenses,
+
+            profit:
+                currentDeal.profit
+
+        };
+
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("deals")
+            .insert(deal);
+
+
+
+        if (error) {
+
+            console.error(error);
+
+            document.getElementById(
+                "message"
+            ).innerText =
+                "Ошибка сохранения: " +
+                error.message;
+
+            return;
+
+        }
+
+
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "✅ Сделка сохранена";
+
+
+    }
+
+
+
+    // ==============================
+    // ФОРМАТ ДЕНЕГ
+    // ==============================
 
     function formatMoney(number) {
 

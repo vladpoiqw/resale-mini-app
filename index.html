@@ -15,115 +15,257 @@
 
         body {
             margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
+            padding: 18px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: var(--tg-theme-bg-color, #0f0f10);
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+
+        .header {
+            margin-top: 8px;
+            margin-bottom: 24px;
+        }
+
+        .logo {
+            font-size: 14px;
+            opacity: 0.5;
+            margin-bottom: 8px;
         }
 
         h1 {
-            margin-top: 10px;
-            font-size: 28px;
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: -1px;
         }
 
         .subtitle {
-            opacity: 0.6;
-            margin-bottom: 25px;
+            margin-top: 7px;
+            opacity: 0.55;
+            font-size: 14px;
         }
 
         .card {
-            padding: 18px;
-            border-radius: 18px;
-            background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+            background: var(--tg-theme-secondary-bg-color, #19191b);
+            border-radius: 22px;
+            padding: 20px;
+        }
+
+        .field {
+            margin-bottom: 17px;
         }
 
         label {
             display: block;
-            margin-top: 15px;
+            font-size: 13px;
+            opacity: 0.55;
             margin-bottom: 7px;
-            font-size: 14px;
-            opacity: 0.7;
         }
 
         input {
             width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 17px;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
+            height: 52px;
+            padding: 0 15px;
+            border: 0;
             outline: none;
+            border-radius: 14px;
+
+            background: var(--tg-theme-bg-color, #101011);
+            color: var(--tg-theme-text-color, #ffffff);
+
+            font-size: 17px;
+        }
+
+        input::placeholder {
+            opacity: 0.3;
         }
 
         button {
             width: 100%;
-            margin-top: 20px;
-            padding: 15px;
-            border: none;
-            border-radius: 13px;
+            height: 54px;
+
+            border: 0;
+            border-radius: 15px;
+
             background: var(--tg-theme-button-color, #2481cc);
             color: var(--tg-theme-button-text-color, #ffffff);
-            font-size: 17px;
-            font-weight: bold;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
         }
 
         .result {
-            margin-top: 20px;
-            padding: 18px;
-            border-radius: 15px;
-            background: var(--tg-theme-bg-color, #ffffff);
             display: none;
+
+            margin-top: 18px;
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background: var(--tg-theme-secondary-bg-color, #19191b);
+        }
+
+        .result-title {
+            font-size: 13px;
+            opacity: 0.5;
+            margin-bottom: 6px;
         }
 
         .profit {
-            font-size: 30px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat {
+            padding: 14px;
+            border-radius: 15px;
+            background: var(--tg-theme-bg-color, #101011);
+        }
+
+        .stat-name {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            opacity: 0.3;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>💰 Resale Profit</h1>
+<div class="header">
 
-    <div class="subtitle">
-        Расчёт прибыли с перепродажи
+    <div class="logo">
+        RESALE TOOLS
     </div>
 
-    <div class="card">
+    <h1>Прибыль</h1>
+
+    <div class="subtitle">
+        Рассчитай доходность сделки за несколько секунд
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="field">
 
         <label>Цена покупки</label>
-        <input id="buy" type="number" placeholder="Например: 5000">
+
+        <input
+            id="buy"
+            type="number"
+            inputmode="decimal"
+            placeholder="0 ₽"
+        >
+
+    </div>
+
+
+    <div class="field">
 
         <label>Цена продажи</label>
-        <input id="sell" type="number" placeholder="Например: 8000">
 
-        <label>Комиссия и расходы</label>
-        <input id="expenses" type="number" placeholder="Например: 500">
+        <input
+            id="sell"
+            type="number"
+            inputmode="decimal"
+            placeholder="0 ₽"
+        >
 
-        <button onclick="calculate()">
-            Рассчитать прибыль
-        </button>
+    </div>
 
-        <div class="result" id="result">
 
-            <div class="profit" id="profit">
-                0 ₽
+    <div class="field">
+
+        <label>Комиссия и другие расходы</label>
+
+        <input
+            id="expenses"
+            type="number"
+            inputmode="decimal"
+            placeholder="0 ₽"
+        >
+
+    </div>
+
+
+    <button onclick="calculate()">
+        Рассчитать
+    </button>
+
+</div>
+
+
+<div class="result" id="result">
+
+    <div class="result-title">
+        Чистая прибыль
+    </div>
+
+    <div class="profit" id="profit">
+        0 ₽
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-name">
+                Маржа
             </div>
 
-            <div id="margin">
-                Маржа: 0%
+            <div class="stat-value" id="margin">
+                0%
             </div>
 
-            <div id="roi">
-                ROI: 0%
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-name">
+                ROI
+            </div>
+
+            <div class="stat-value" id="roi">
+                0%
             </div>
 
         </div>
 
     </div>
+
+</div>
+
+
+<div class="footer">
+    Resale Profit · v1.0
+</div>
+
 
 <script>
 
@@ -132,33 +274,62 @@
     tg.ready();
     tg.expand();
 
+
     function calculate() {
 
-        const buy = Number(document.getElementById("buy").value);
-        const sell = Number(document.getElementById("sell").value);
-        const expenses = Number(document.getElementById("expenses").value);
+        const buy =
+            Number(document.getElementById("buy").value);
 
-        if (!buy || !sell) {
-            alert("Заполни цену покупки и продажи");
+        const sell =
+            Number(document.getElementById("sell").value);
+
+        const expenses =
+            Number(document.getElementById("expenses").value) || 0;
+
+
+        if (buy <= 0 || sell <= 0) {
+
+            alert("Укажи цену покупки и продажи");
+
             return;
         }
 
-        const profit = sell - buy - expenses;
 
-        const margin = (profit / sell) * 100;
+        const profit =
+            sell - buy - expenses;
 
-        const roi = (profit / buy) * 100;
+
+        const margin =
+            (profit / sell) * 100;
+
+
+        const roi =
+            (profit / buy) * 100;
+
 
         document.getElementById("profit").innerText =
-            profit.toFixed(0) + " ₽";
+            formatMoney(profit);
+
 
         document.getElementById("margin").innerText =
-            "Маржа: " + margin.toFixed(1) + "%";
+            margin.toFixed(1) + "%";
+
 
         document.getElementById("roi").innerText =
-            "ROI: " + roi.toFixed(1) + "%";
+            roi.toFixed(1) + "%";
 
-        document.getElementById("result").style.display = "block";
+
+        document.getElementById("result").style.display =
+            "block";
+    }
+
+
+    function formatMoney(number) {
+
+        return new Intl.NumberFormat("ru-RU", {
+            maximumFractionDigits: 0
+        }).format(number) + " ₽";
+
     }
 
 </script>

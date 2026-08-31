@@ -615,19 +615,21 @@ if (screenId === "dealsScreen") {
 }
 async function loadDeals() {
 
-    if (!user) {
-        return;
-    }
-
     const { data, error } = await supabaseClient
         .from("deals")
         .select("*")
-        .eq("user_id", String(user.id))
         .order("created_at", { ascending: false });
+
 
     if (error) {
 
-        console.error("Ошибка загрузки сделок:", error);
+        console.error("Ошибка загрузки:", error);
+
+        document.getElementById("dealsCount").innerText =
+            "Ошибка";
+
+        document.getElementById("totalProfit").innerText =
+            error.message;
 
         return;
     }

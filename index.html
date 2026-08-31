@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resale Profit</title>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        h1 {
+            margin-top: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            opacity: 0.6;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            padding: 18px;
+            border-radius: 18px;
+            background: var(--tg-theme-secondary-bg-color, #f1f1f1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 13px;
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 15px;
+            background: var(--tg-theme-bg-color, #ffffff);
+            display: none;
+        }
+
+        .profit {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>💰 Resale Profit</h1>
+
+    <div class="subtitle">
+        Расчёт прибыли с перепродажи
+    </div>
+
+    <div class="card">
+
+        <label>Цена покупки</label>
+        <input id="buy" type="number" placeholder="Например: 5000">
+
+        <label>Цена продажи</label>
+        <input id="sell" type="number" placeholder="Например: 8000">
+
+        <label>Комиссия и расходы</label>
+        <input id="expenses" type="number" placeholder="Например: 500">
+
+        <button onclick="calculate()">
+            Рассчитать прибыль
+        </button>
+
+        <div class="result" id="result">
+
+            <div class="profit" id="profit">
+                0 ₽
+            </div>
+
+            <div id="margin">
+                Маржа: 0%
+            </div>
+
+            <div id="roi">
+                ROI: 0%
+            </div>
+
+        </div>
+
+    </div>
+
+<script>
+
+    const tg = window.Telegram.WebApp;
+
+    tg.ready();
+    tg.expand();
+
+    function calculate() {
+
+        const buy = Number(document.getElementById("buy").value);
+        const sell = Number(document.getElementById("sell").value);
+        const expenses = Number(document.getElementById("expenses").value);
+
+        if (!buy || !sell) {
+            alert("Заполни цену покупки и продажи");
+            return;
+        }
+
+        const profit = sell - buy - expenses;
+
+        const margin = (profit / sell) * 100;
+
+        const roi = (profit / buy) * 100;
+
+        document.getElementById("profit").innerText =
+            profit.toFixed(0) + " ₽";
+
+        document.getElementById("margin").innerText =
+            "Маржа: " + margin.toFixed(1) + "%";
+
+        document.getElementById("roi").innerText =
+            "ROI: " + roi.toFixed(1) + "%";
+
+        document.getElementById("result").style.display = "block";
+    }
+
+</script>
+
+</body>
+</html>

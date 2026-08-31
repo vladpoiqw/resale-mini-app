@@ -8,11 +8,9 @@
     <title>Resale Profit</title>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -20,27 +18,19 @@
         body {
             margin: 0;
             padding: 18px;
-
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
             background: var(--tg-theme-bg-color, #0f0f10);
             color: var(--tg-theme-text-color, #ffffff);
         }
 
         .header {
-            margin-top: 8px;
-            margin-bottom: 24px;
+            margin: 8px 0 24px;
         }
 
         .logo {
             font-size: 13px;
             letter-spacing: 1px;
-            opacity: 0.45;
+            opacity: .45;
             margin-bottom: 8px;
         }
 
@@ -52,7 +42,7 @@
         .subtitle {
             margin-top: 8px;
             font-size: 14px;
-            opacity: 0.55;
+            opacity: .55;
         }
 
         .card,
@@ -70,42 +60,36 @@
             display: block;
             margin-bottom: 7px;
             font-size: 13px;
-            opacity: 0.55;
+            opacity: .55;
         }
 
         input {
             width: 100%;
             height: 52px;
             padding: 0 15px;
-
-            border: none;
-            outline: none;
+            border: 0;
+            outline: 0;
             border-radius: 14px;
-
             background: var(--tg-theme-bg-color, #101011);
-            color: var(--tg-theme-text-color, #ffffff);
-
+            color: var(--tg-theme-text-color, #fff);
             font-size: 17px;
         }
 
         button {
             width: 100%;
             height: 54px;
-
-            border: none;
+            border: 0;
             border-radius: 15px;
-
             background: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-
+            color: var(--tg-theme-button-text-color, #fff);
             font-size: 16px;
             font-weight: 600;
         }
 
-        .save-button {
-            margin-top: 10px;
+        .save {
+            margin-top: 12px;
             background: transparent;
-            border: 1px solid rgba(128,128,128,0.35);
+            border: 1px solid rgba(128,128,128,.35);
         }
 
         .result {
@@ -115,14 +99,13 @@
 
         .result-title {
             font-size: 13px;
-            opacity: 0.5;
-            margin-bottom: 6px;
+            opacity: .5;
         }
 
         .profit {
             font-size: 36px;
             font-weight: 700;
-            margin-bottom: 18px;
+            margin: 6px 0 18px;
         }
 
         .stats {
@@ -139,7 +122,7 @@
 
         .stat-name {
             font-size: 12px;
-            opacity: 0.5;
+            opacity: .5;
             margin-bottom: 5px;
         }
 
@@ -148,37 +131,29 @@
             font-weight: 600;
         }
 
-        .message {
+        #message {
             text-align: center;
             margin-top: 12px;
             font-size: 13px;
-            opacity: 0.6;
+            opacity: .7;
         }
 
         .footer {
             text-align: center;
             margin-top: 20px;
             font-size: 11px;
-            opacity: 0.3;
+            opacity: .3;
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <div class="header">
 
-    <div class="logo">
-        RESALE TOOLS
-    </div>
+    <div class="logo">RESALE TOOLS</div>
 
-    <h1>
-        Прибыль
-    </h1>
+    <h1>Прибыль</h1>
 
     <div class="subtitle" id="subtitle">
         Рассчитай доходность сделки
@@ -189,12 +164,8 @@
 
 <div class="card">
 
-
     <div class="field">
-
-        <label>
-            Цена покупки
-        </label>
+        <label>Цена покупки</label>
 
         <input
             id="buy"
@@ -202,15 +173,11 @@
             inputmode="decimal"
             placeholder="0 ₽"
         >
-
     </div>
 
 
     <div class="field">
-
-        <label>
-            Цена продажи
-        </label>
+        <label>Цена продажи</label>
 
         <input
             id="sell"
@@ -218,27 +185,23 @@
             inputmode="decimal"
             placeholder="0 ₽"
         >
-
     </div>
 
 
     <div class="field">
-
-        <label>
-            Комиссия и расходы
-        </label>
+        <label>Комиссия и расходы</label>
 
         <input
             id="expenses"
             type="number"
             inputmode="decimal"
             placeholder="0 ₽"
+            value="0"
         >
-
     </div>
 
 
-    <button onclick="calculate()">
+    <button id="calculateButton">
         Рассчитать
     </button>
 
@@ -259,47 +222,26 @@
     <div class="stats">
 
         <div class="stat">
-
-            <div class="stat-name">
-                Маржа
-            </div>
-
-            <div class="stat-value" id="margin">
-                0%
-            </div>
-
+            <div class="stat-name">Маржа</div>
+            <div class="stat-value" id="margin">0%</div>
         </div>
 
-
         <div class="stat">
-
-            <div class="stat-name">
-                ROI
-            </div>
-
-            <div class="stat-value" id="roi">
-                0%
-            </div>
-
+            <div class="stat-name">ROI</div>
+            <div class="stat-value" id="roi">0%</div>
         </div>
 
     </div>
 
 
-    <button
-        class="save-button"
-        onclick="saveDeal()"
-    >
+    <button class="save" id="saveButton">
         💾 Сохранить сделку
     </button>
 
 </div>
 
 
-<div
-    class="message"
-    id="message"
-></div>
+<div id="message"></div>
 
 
 <div class="footer">
@@ -307,16 +249,14 @@
 </div>
 
 
-
 <script>
 
-
-    // ==============================
+    // =========================
     // SUPABASE
-    // ==============================
+    // =========================
 
     const SUPABASE_URL =
-        "msqszglpcbutxeciaoma";
+        "https://msqszglpcbutxeciaoma.supabase.co";
 
     const SUPABASE_KEY =
         "sb_publishable_khm1gzHsh9AihyYrA7k63w_CiBsNc0B";
@@ -329,16 +269,14 @@
         );
 
 
-
-    // ==============================
+    // =========================
     // TELEGRAM
-    // ==============================
+    // =========================
 
     const tg =
         window.Telegram.WebApp;
 
     tg.ready();
-
     tg.expand();
 
 
@@ -358,216 +296,168 @@
     }
 
 
-
-    // ==============================
+    // =========================
     // ТЕКУЩАЯ СДЕЛКА
-    // ==============================
+    // =========================
 
     let currentDeal = null;
 
 
-
-    // ==============================
+    // =========================
     // РАСЧЁТ
-    // ==============================
+    // =========================
 
-    function calculate() {
+    document
+        .getElementById("calculateButton")
+        .addEventListener("click", function () {
 
+            const buy =
+                Number(
+                    document.getElementById("buy").value
+                );
 
-        const buy =
-            Number(
-                document.getElementById(
-                    "buy"
-                ).value
-            );
+            const sell =
+                Number(
+                    document.getElementById("sell").value
+                );
 
-
-        const sell =
-            Number(
-                document.getElementById(
-                    "sell"
-                ).value
-            );
-
-
-        const expenses =
-            Number(
-                document.getElementById(
-                    "expenses"
-                ).value
-            ) || 0;
+            const expenses =
+                Number(
+                    document.getElementById("expenses").value
+                ) || 0;
 
 
+            if (buy <= 0 || sell <= 0) {
 
-        if (
-            buy <= 0 ||
-            sell <= 0
-        ) {
+                tg.showAlert(
+                    "Укажи цену покупки и продажи"
+                );
 
-            alert(
-                "Укажи цену покупки и продажи"
-            );
-
-            return;
-
-        }
+                return;
+            }
 
 
-
-        const profit =
-            sell -
-            buy -
-            expenses;
+            const profit =
+                sell - buy - expenses;
 
 
-        const margin =
-            (profit / sell) * 100;
+            const margin =
+                (profit / sell) * 100;
 
 
-        const roi =
-            (profit / buy) * 100;
+            const roi =
+                (profit / buy) * 100;
 
 
-
-        currentDeal = {
-
-            buy_price: buy,
-
-            sell_price: sell,
-
-            expenses: expenses,
-
-            profit: profit
-
-        };
+            currentDeal = {
+                buy_price: buy,
+                sell_price: sell,
+                expenses: expenses,
+                profit: profit
+            };
 
 
-
-        document.getElementById(
-            "profit"
-        ).innerText =
-            formatMoney(profit);
+            document.getElementById("profit").innerText =
+                money(profit);
 
 
-
-        document.getElementById(
-            "margin"
-        ).innerText =
-            margin.toFixed(1) + "%";
+            document.getElementById("margin").innerText =
+                margin.toFixed(1) + "%";
 
 
-
-        document.getElementById(
-            "roi"
-        ).innerText =
-            roi.toFixed(1) + "%";
+            document.getElementById("roi").innerText =
+                roi.toFixed(1) + "%";
 
 
-
-        document.getElementById(
-            "result"
-        ).style.display =
-            "block";
+            document.getElementById("result").style.display =
+                "block";
 
 
-        document.getElementById(
-            "message"
-        ).innerText = "";
+            document.getElementById("message").innerText =
+                "";
 
-    }
-
+        });
 
 
-    // ==============================
+    // =========================
     // СОХРАНЕНИЕ
-    // ==============================
+    // =========================
 
-    async function saveDeal() {
+    document
+        .getElementById("saveButton")
+        .addEventListener("click", async function () {
 
-
-        if (!currentDeal) {
-
-            alert(
-                "Сначала рассчитай сделку"
-            );
-
-            return;
-
-        }
+            const message =
+                document.getElementById("message");
 
 
-        if (!user) {
+            if (!currentDeal) {
 
-            alert(
-                "Не удалось определить пользователя Telegram"
-            );
+                message.innerText =
+                    "Сначала рассчитай сделку";
 
-            return;
-
-        }
+                return;
+            }
 
 
+            if (!user) {
 
-        const deal = {
+                message.innerText =
+                    "Не удалось определить Telegram-пользователя";
 
-            user_id:
-                String(user.id),
-
-            buy_price:
-                currentDeal.buy_price,
-
-            sell_price:
-                currentDeal.sell_price,
-
-            expenses:
-                currentDeal.expenses,
-
-            profit:
-                currentDeal.profit
-
-        };
+                return;
+            }
 
 
-
-        const {
-            error
-        } = await supabaseClient
-            .from("deals")
-            .insert(deal);
+            message.innerText =
+                "Сохраняем...";
 
 
+            const { error } =
+                await supabaseClient
+                    .from("deals")
+                    .insert({
 
-        if (error) {
+                        user_id:
+                            String(user.id),
 
-            console.error(error);
+                        buy_price:
+                            currentDeal.buy_price,
 
-            document.getElementById(
-                "message"
-            ).innerText =
-                "Ошибка сохранения: " +
-                error.message;
+                        sell_price:
+                            currentDeal.sell_price,
 
-            return;
+                        expenses:
+                            currentDeal.expenses,
 
-        }
+                        profit:
+                            currentDeal.profit
 
-
-
-        document.getElementById(
-            "message"
-        ).innerText =
-            "✅ Сделка сохранена";
-
-
-    }
+                    });
 
 
+            if (error) {
 
-    // ==============================
+                console.error(error);
+
+                message.innerText =
+                    "Ошибка: " + error.message;
+
+                return;
+            }
+
+
+            message.innerText =
+                "✅ Сделка сохранена";
+
+        });
+
+
+    // =========================
     // ФОРМАТ ДЕНЕГ
-    // ==============================
+    // =========================
 
-    function formatMoney(number) {
+    function money(number) {
 
         return new Intl.NumberFormat(
             "ru-RU",
@@ -578,10 +468,7 @@
 
     }
 
-
 </script>
 
-
 </body>
-
 </html>

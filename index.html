@@ -627,7 +627,7 @@ async function loadDeals() {
 
         document.getElementById("dealsCount").innerText =
             "Ошибка";
-
+renderDeals(data);
         document.getElementById("totalProfit").innerText =
             error.message;
 

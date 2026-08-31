@@ -597,7 +597,11 @@ function showScreen(screenId) {
 
     document.getElementById(screenId).style.display = "block";
 
+if (screenId === "dealsScreen") {
 
+    loadDeals();
+
+}
     if (screenId === "profileScreen" && user) {
 
         document.getElementById("profileName").innerText =
@@ -609,7 +613,49 @@ function showScreen(screenId) {
     }
 
 }
+async function loadDeals() {
 
+    if (!user) {
+        return;
+    }
+
+    const { data, error } = await supabaseClient
+        .from("deals")
+        .select("*")
+        .eq("user_id", String(user.id))
+        .order("created_at", { ascending: false });
+
+    if (error) {
+
+        console.error("Ошибка загрузки сделок:", error);
+
+        return;
+    }
+
+
+    const dealsCount =
+        document.getElementById("dealsCount");
+
+    const totalProfit =
+        document.getElementById("totalProfit");
+
+
+    dealsCount.innerText =
+        data.length;
+
+
+    const total =
+        data.reduce(
+            (sum, deal) =>
+                sum + Number(deal.profit || 0),
+            0
+        );
+
+
+    totalProfit.innerText =
+        money(total);
+
+}
 </script>
 </body>
     <div id="calculatorScreen">

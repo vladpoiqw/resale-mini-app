@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -16,7 +18,14 @@
         body {
             margin: 0;
             padding: 18px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
             background: var(--tg-theme-bg-color, #0f0f10);
             color: var(--tg-theme-text-color, #ffffff);
         }
@@ -27,8 +36,9 @@
         }
 
         .logo {
-            font-size: 14px;
-            opacity: 0.5;
+            font-size: 13px;
+            letter-spacing: 1px;
+            opacity: 0.45;
             margin-bottom: 8px;
         }
 
@@ -39,9 +49,9 @@
         }
 
         .subtitle {
-            margin-top: 7px;
-            opacity: 0.55;
+            margin-top: 8px;
             font-size: 14px;
+            opacity: 0.55;
         }
 
         .card {
@@ -56,17 +66,21 @@
 
         label {
             display: block;
+            margin-bottom: 7px;
+
             font-size: 13px;
             opacity: 0.55;
-            margin-bottom: 7px;
         }
 
         input {
             width: 100%;
             height: 52px;
+
             padding: 0 15px;
-            border: 0;
+
+            border: none;
             outline: none;
+
             border-radius: 14px;
 
             background: var(--tg-theme-bg-color, #101011);
@@ -83,7 +97,7 @@
             width: 100%;
             height: 54px;
 
-            border: 0;
+            border: none;
             border-radius: 15px;
 
             background: var(--tg-theme-button-color, #2481cc);
@@ -91,8 +105,6 @@
 
             font-size: 16px;
             font-weight: 600;
-
-            cursor: pointer;
         }
 
         .result {
@@ -115,25 +127,32 @@
         .profit {
             font-size: 36px;
             font-weight: 700;
+
             letter-spacing: -1px;
+
             margin-bottom: 18px;
         }
 
         .stats {
             display: grid;
+
             grid-template-columns: 1fr 1fr;
+
             gap: 10px;
         }
 
         .stat {
             padding: 14px;
+
             border-radius: 15px;
+
             background: var(--tg-theme-bg-color, #101011);
         }
 
         .stat-name {
             font-size: 12px;
             opacity: 0.5;
+
             margin-bottom: 5px;
         }
 
@@ -144,14 +163,21 @@
 
         .footer {
             text-align: center;
+
             margin-top: 20px;
+
             font-size: 11px;
+
             opacity: 0.3;
         }
+
     </style>
+
 </head>
 
+
 <body>
+
 
 <div class="header">
 
@@ -159,20 +185,26 @@
         RESALE TOOLS
     </div>
 
-    <h1>Прибыль</h1>
+    <h1>
+        Прибыль
+    </h1>
 
-    <div class="subtitle">
+    <div class="subtitle" id="subtitle">
         Рассчитай доходность сделки за несколько секунд
     </div>
 
 </div>
 
 
+
 <div class="card">
+
 
     <div class="field">
 
-        <label>Цена покупки</label>
+        <label>
+            Цена покупки
+        </label>
 
         <input
             id="buy"
@@ -184,9 +216,12 @@
     </div>
 
 
+
     <div class="field">
 
-        <label>Цена продажи</label>
+        <label>
+            Цена продажи
+        </label>
 
         <input
             id="sell"
@@ -198,9 +233,12 @@
     </div>
 
 
+
     <div class="field">
 
-        <label>Комиссия и другие расходы</label>
+        <label>
+            Комиссия и другие расходы
+        </label>
 
         <input
             id="expenses"
@@ -212,18 +250,23 @@
     </div>
 
 
+
     <button onclick="calculate()">
         Рассчитать
     </button>
 
+
 </div>
+
 
 
 <div class="result" id="result">
 
+
     <div class="result-title">
         Чистая прибыль
     </div>
+
 
     <div class="profit" id="profit">
         0 ₽
@@ -232,17 +275,22 @@
 
     <div class="stats">
 
+
         <div class="stat">
 
             <div class="stat-name">
                 Маржа
             </div>
 
-            <div class="stat-value" id="margin">
+            <div
+                class="stat-value"
+                id="margin"
+            >
                 0%
             </div>
 
         </div>
+
 
 
         <div class="stat">
@@ -251,15 +299,21 @@
                 ROI
             </div>
 
-            <div class="stat-value" id="roi">
+            <div
+                class="stat-value"
+                id="roi"
+            >
                 0%
             </div>
 
         </div>
 
+
     </div>
 
+
 </div>
+
 
 
 <div class="footer">
@@ -267,82 +321,129 @@
 </div>
 
 
+
 <script>
+
+
+    // Telegram Mini App
 
     const tg = window.Telegram.WebApp;
 
     tg.ready();
+
     tg.expand();
 
 
+
+    // Получаем пользователя Telegram
+
+    const user = tg.initDataUnsafe?.user;
+
+
+    if (user) {
+
+        document.getElementById("subtitle").innerText =
+            "Привет, " + user.first_name + "!";
+
+        console.log(
+            "Telegram ID:",
+            user.id
+        );
+
+    }
+
+
+
+    // Расчёт прибыли
+
     function calculate() {
 
+
         const buy =
-            Number(document.getElementById("buy").value);
+            Number(
+                document.getElementById("buy").value
+            );
+
 
         const sell =
-            Number(document.getElementById("sell").value);
+            Number(
+                document.getElementById("sell").value
+            );
+
 
         const expenses =
-            Number(document.getElementById("expenses").value) || 0;
+            Number(
+                document.getElementById("expenses").value
+            ) || 0;
+
 
 
         if (buy <= 0 || sell <= 0) {
 
-            alert("Укажи цену покупки и продажи");
+            alert(
+                "Укажи цену покупки и продажи"
+            );
 
             return;
+
         }
+
 
 
         const profit =
             sell - buy - expenses;
 
 
+
         const margin =
             (profit / sell) * 100;
+
 
 
         const roi =
             (profit / buy) * 100;
 
 
+
         document.getElementById("profit").innerText =
             formatMoney(profit);
+
 
 
         document.getElementById("margin").innerText =
             margin.toFixed(1) + "%";
 
 
+
         document.getElementById("roi").innerText =
             roi.toFixed(1) + "%";
 
 
+
         document.getElementById("result").style.display =
             "block";
+
     }
 
+
+
+    // Форматирование денег
 
     function formatMoney(number) {
 
-        return new Intl.NumberFormat("ru-RU", {
-            maximumFractionDigits: 0
-        }).format(number) + " ₽";
+        return new Intl.NumberFormat(
+            "ru-RU",
+            {
+                maximumFractionDigits: 0
+            }
+        ).format(number) + " ₽";
 
     }
 
+
 </script>
 
+
 </body>
+
 </html>
-const tg = window.Telegram.WebApp;
-
-tg.ready();
-tg.expand();
-
-const user = tg.initDataUnsafe?.user;
-if (user) {
-    console.log("Пользователь:", user.id);
-    console.log("Имя:", user.first_name);
-}

@@ -627,81 +627,17 @@ async function loadDeals() {
 
         document.getElementById("dealsCount").innerText =
             "Ошибка";
-renderDeals(data);
+
         document.getElementById("totalProfit").innerText =
             error.message;
 
         return;
     }
-function renderDeals(data) {
 
-    const list = document.getElementById("dealsList");
-
-    list.innerHTML = "";
-
-    if (!data || data.length === 0) {
-
-        list.innerHTML = `
-            <div class="card" style="margin-top:15px;">
-                Пока нет сделок
-            </div>
-        `;
-
-        return;
-    }
-
-    data.forEach(function(deal) {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        card.style.marginTop = "15px";
-
-        card.innerHTML = `
-
-            <div style="
-                font-size:26px;
-                font-weight:700;
-                margin-bottom:14px;
-            ">
-                ${money(Number(deal.profit || 0))}
-            </div>
-
-            <div class="stat-name">
-                Покупка
-            </div>
-
-            <div style="margin-bottom:10px;">
-                ${money(Number(deal.buy_price || 0))}
-            </div>
-
-            <div class="stat-name">
-                Продажа
-            </div>
-
-            <div style="margin-bottom:10px;">
-                ${money(Number(deal.sell_price || 0))}
-            </div>
-
-            <div class="stat-name">
-                Расходы
-            </div>
-
-            <div>
-                ${money(Number(deal.expenses || 0))}
-            </div>
-
-        `;
-
-        list.appendChild(card);
-
-    });
-
-}
 
     const dealsCount =
         document.getElementById("dealsCount");
+
 
     const totalProfit =
         document.getElementById("totalProfit");
@@ -722,7 +658,11 @@ function renderDeals(data) {
     totalProfit.innerText =
         money(total);
 
+
+    renderDeals(data);
+
 }
+
 </script>
 </body>
     <div id="calculatorScreen">
